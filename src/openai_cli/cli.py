@@ -2,7 +2,8 @@ import io
 import os
 
 import click
-import requests
+
+from openai_cli.client import build_completion_client
 
 
 @click.group()
@@ -18,10 +19,9 @@ def complete(source: io.TextIOWrapper, token: str) -> None:
     token = token or os.environ.get("OPENAI_API_TOKEN", "")
     if not token:
         click.exceptions.MissingParameter(
-            "Either --token option or OPENAI_API_TOKEN "
-            "environment variable must be provided",
+            "Either --token option or OPENAI_API_TOKEN environment variable must be provided",
         )
-    client = CompletionClient(token)
+    client = build_completion_client(token)
     prompt = source.read()
     result = client.generate_response(prompt)
     click.echo(result)
@@ -34,39 +34,11 @@ def repl(token: str) -> None:
     token = token or os.environ.get("OPENAI_API_TOKEN", "")
     if not token:
         click.exceptions.MissingParameter(
-            "Either --token option or OPENAI_API_TOKEN "
-            "environment variable must be provided",
+            "Either --token option or OPENAI_API_TOKEN environment variable must be provided",
         )
-    client = CompletionClient(token)
+    client = build_completion_client(token)
     while True:
         print(client.generate_response(input("Prompt: ")))
-
-
-class CompletionClient:
-    API_URL = "https://api.openai.com/v1/completions"
-    MAX_TOKENS = 1000
-    TEMPERATURE = 0.1
-
-    def __init__(self, api_key: str) -> None:
-        self._headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-
-    def generate_response(self, prompt: str, model: str = "text-davinci-003") -> str:
-        response = requests.post(
-            self.API_URL,
-            headers=self._headers,
-            json={
-                "prompt": prompt,
-                "model": model,
-                "max_tokens": self.MAX_TOKENS,
-                "temperature": self.TEMPERATURE,
-            },
-            timeout=60,
-        )
-        response.raise_for_status()
-        return response.json()["choices"][0]["text"]
 
 
 if __name__ == "__main__":
