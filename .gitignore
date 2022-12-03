@@ -1,0 +1,7 @@
+Session.vim
+*.swp
+*.egg-info/
+__pycache__/
+/build/
+/dist/
+.coverage

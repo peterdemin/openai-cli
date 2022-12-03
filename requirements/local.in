@@ -1,0 +1,23 @@
+-r base.in
+
+# fmt
+isort
+black
+
+# tests
+pytest
+pytest-checkdocs
+pytest-flake8; python_version < "3.12"
+flake8
+pytest-cov
+pytest-black; python_implementation != "PyPy"
+pytest-mypy >= 0.9.1; python_implementation != "PyPy"
+pytest-enabler
+
+# docs
+sphinx
+rst.linker
+furo
+
+# deps
+pip-compile-multi
