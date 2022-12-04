@@ -21,7 +21,6 @@ help:
 .PHONY: clean
 clean: ## remove build artifacts
 	rm -rf build/ \
-	       docs/ \
 	       dist/ \
 	       .eggs/
 	find . -name '.eggs' -type d -exec rm -rf {} +
