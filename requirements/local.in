@@ -25,6 +25,7 @@ furo
 pip-compile-multi
 twine
 bump2version
+pex
 
 # debugging
 ipython

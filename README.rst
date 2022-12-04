@@ -54,3 +54,88 @@ Run without arguments to get a short help message::
     Commands:
       complete  Return OpenAI completion for a prompt from SOURCE.
       repl      Start interactive shell session for OpenAI completion API.
+
+Build a standalone binary using pex and move it into PATH::
+
+    $ make openai && mv openai ~/bin/
+    $ openai repl
+    Prompt:
+
+Example usage
+-------------
+
+Here's an example usage scenario, where we first create a Python module
+with a Fibonacci function implementation, and then generate a unit test for it::
+
+    $ mkdir examples
+    $ touch examples/__init__.py
+    $ echo "Write Python function to calculate Fibonacci numbers" | openai complete - | black - > examples/fib.py
+    $ (echo 'Write unit tests for this Python module named "fib":\n'; cat examples/fib.py) | openai complete - | black - > examples/test_fib.py
+    $ pytest -v examples/test_fib.py
+    ============================== test session starts ==============================
+
+    examples/test_fib.py::TestFibonacci::test_eighth_fibonacci_number PASSED                                 [ 10%]
+    examples/test_fib.py::TestFibonacci::test_fifth_fibonacci_number PASSED                                  [ 20%]
+    examples/test_fib.py::TestFibonacci::test_first_fibonacci_number PASSED                                  [ 30%]
+    examples/test_fib.py::TestFibonacci::test_fourth_fibonacci_number PASSED                                 [ 40%]
+    examples/test_fib.py::TestFibonacci::test_negative_input PASSED                                          [ 50%]
+    examples/test_fib.py::TestFibonacci::test_ninth_fibonacci_number PASSED                                  [ 60%]
+    examples/test_fib.py::TestFibonacci::test_second_fibonacci_number PASSED                                 [ 70%]
+    examples/test_fib.py::TestFibonacci::test_seventh_fibonacci_number PASSED                                [ 80%]
+    examples/test_fib.py::TestFibonacci::test_sixth_fibonacci_number PASSED                                  [ 90%]
+    examples/test_fib.py::TestFibonacci::test_third_fibonacci_number PASSED                                  [100%]
+
+    =============================== 10 passed in 0.02s ==============================
+
+    $ cat examples/fib.py
+    def Fibonacci(n):
+        if n < 0:
+            print("Incorrect input")
+        # First Fibonacci number is 0
+        elif n == 1:
+            return 0
+        # Second Fibonacci number is 1
+        elif n == 2:
+            return 1
+        else:
+            return Fibonacci(n - 1) + Fibonacci(n - 2)
+
+    $ cat examples/test_fib.py
+    import unittest
+    from .fib import Fibonacci
+
+
+    class TestFibonacci(unittest.TestCase):
+        def test_negative_input(self):
+            self.assertEqual(Fibonacci(-1), None)
+
+        def test_first_fibonacci_number(self):
+            self.assertEqual(Fibonacci(1), 0)
+
+        def test_second_fibonacci_number(self):
+            self.assertEqual(Fibonacci(2), 1)
+
+        def test_third_fibonacci_number(self):
+            self.assertEqual(Fibonacci(3), 1)
+
+        def test_fourth_fibonacci_number(self):
+            self.assertEqual(Fibonacci(4), 2)
+
+        def test_fifth_fibonacci_number(self):
+            self.assertEqual(Fibonacci(5), 3)
+
+        def test_sixth_fibonacci_number(self):
+            self.assertEqual(Fibonacci(6), 5)
+
+        def test_seventh_fibonacci_number(self):
+            self.assertEqual(Fibonacci(7), 8)
+
+        def test_eighth_fibonacci_number(self):
+            self.assertEqual(Fibonacci(8), 13)
+
+        def test_ninth_fibonacci_number(self):
+            self.assertEqual(Fibonacci(9), 21)
+
+
+    if __name__ == "__main__":
+        unittest.main()
