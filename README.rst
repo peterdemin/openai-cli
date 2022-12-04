@@ -67,7 +67,8 @@ Example usage
 Here's an example usage scenario, where we first create a Python module
 with a Fibonacci function implementation, and then generate a unit test for it:
 
-.. code-block:: bash
+.. code:: bash
+
     $ mkdir examples
     $ touch examples/__init__.py
     $ echo "Write Python function to calculate Fibonacci numbers" | openai complete - | black - > examples/fib.py
@@ -90,7 +91,8 @@ with a Fibonacci function implementation, and then generate a unit test for it:
 
     $ cat examples/fib.py
 
-.. code-block:: python
+.. code:: python
+
     def Fibonacci(n):
         if n < 0:
             print("Incorrect input")
@@ -103,10 +105,12 @@ with a Fibonacci function implementation, and then generate a unit test for it:
         else:
             return Fibonacci(n - 1) + Fibonacci(n - 2)
 
-.. code-block:: bash
+.. code:: bash
+
     $ cat examples/test_fib.py
 
-.. code-block:: python
+.. code:: python
+
     import unittest
     from .fib import Fibonacci
 
@@ -146,10 +150,12 @@ with a Fibonacci function implementation, and then generate a unit test for it:
     if __name__ == "__main__":
         unittest.main()
 
-.. code-block:: bash
+.. code:: bash
+
     $ (echo "Add type annotations for this Python code"; cat examples/fib.py) | openai complete - | black - | tee tmp && mv tmp examples/fib.py
 
-.. code-block:: python
+.. code:: python
+
     def Fibonacci(n: int) -> int:
         if n < 0:
             print("Incorrect input")
@@ -162,15 +168,18 @@ with a Fibonacci function implementation, and then generate a unit test for it:
         else:
             return Fibonacci(n - 1) + Fibonacci(n - 2)
 
-.. code-block:: bash
+.. code:: bash
+
     $ mypy examples/fib.py
     examples/fib.py:1: error: Missing return statement  [return]
     Found 1 error in 1 file (checked 1 source file)
 
-.. code-block:: bash
+.. code:: bash
+
     $ (echo "Fix mypy warnings in this Python code"; cat examples/fib.py; mypy examples/fib.py) | openai complete - | black - | tee tmp && mv tmp examples/fib.py
 
-.. code-block:: python
+.. code:: python
+
     def Fibonacci(n: int) -> int:
         if n < 0:
             print("Incorrect input")
@@ -184,15 +193,18 @@ with a Fibonacci function implementation, and then generate a unit test for it:
             return Fibonacci(n - 1) + Fibonacci(n - 2)
         return None  # Added return statement
 
-.. code-block:: bash
+.. code:: bash
+
     $ mypy examples/fib.py
     examples/fib.py:12: error: Incompatible return value type (got "None", expected "int")  [return-value]
     Found 1 error in 1 file (checked 1 source file)
 
-.. code-block:: bash
+.. code:: bash
+
     $ (echo "Fix mypy warnings in this Python code"; cat examples/fib.py; mypy examples/fib.py) | openai complete - | black - | tee tmp && mv tmp examples/fib.py
 
-.. code-block:: python
+.. code:: python
+
     def Fibonacci(n: int) -> int:
         if n < 0:
             print("Incorrect input")
@@ -206,14 +218,17 @@ with a Fibonacci function implementation, and then generate a unit test for it:
             return Fibonacci(n - 1) + Fibonacci(n - 2)
         return 0  # Changed return statement to return 0
 
-.. code-block:: bash
+.. code:: bash
+
     $ mypy examples/fib.py
     Success: no issues found in 1 source file
 
-.. code-block:: bash
+.. code:: bash
+
     $ (echo "Rewrite these tests to use pytest.parametrized"; cat examples/test_fib.py) | openai complete - | black - | tee tmp && mv tmp examples/test_fib.py
 
-.. code-block:: python
+.. code:: python
+
     import pytest
     from .fib import Fibonacci
 
