@@ -37,7 +37,6 @@ jobs:
     strategy:
       matrix:
         python:
-        - "3.7"
         - "3.11"
         - "3.12"
         # Workaround for actions/setup-python#508
