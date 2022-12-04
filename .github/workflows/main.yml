@@ -38,7 +38,7 @@ jobs:
       matrix:
         python:
         - "3.11"
-        - "3.12"
+        # - "3.12"  - not supported by Pex
         # Workaround for actions/setup-python#508
         dev:
         - -dev
