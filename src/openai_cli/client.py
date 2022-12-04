@@ -24,7 +24,7 @@ class CompletionClient:
             timeout=self.TIMEOUT,
         )
         response.raise_for_status()
-        return response.json()["choices"][0]["text"]
+        return response.json()["choices"][0]["text"].strip()
 
 
 def build_completion_client(token: str) -> CompletionClient:

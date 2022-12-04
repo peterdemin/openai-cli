@@ -29,6 +29,7 @@ def repl(token: str) -> None:
     client = build_completion_client(get_token(token))
     while True:
         print(client.generate_response(input("Prompt: ")))
+        print()
 
 
 def get_token(token: str) -> str:
@@ -37,8 +38,7 @@ def get_token(token: str) -> str:
     if not token:
         raise click.exceptions.UsageError(
             message=(
-                "Either --token option or OPENAI_API_TOKEN "
-                "environment variable must be provided",
+                "Either --token option or OPENAI_API_TOKEN environment variable must be provided"
             )
         )
     return token
