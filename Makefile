@@ -1,5 +1,6 @@
 .DEFAULT_GOAL := help
 
+PEX := openai
 PROJ := openai_cli
 PROJ_ROOT := src/$(PROJ)
 
@@ -23,6 +24,7 @@ clean: ## remove build artifacts
 	rm -rf build/ \
 	       dist/ \
 	       .eggs/
+	rm -f $(PEX)
 	find . -name '.eggs' -type d -exec rm -rf {} +
 	find . -name '*.egg-info' -exec rm -rf {} +
 	find . -name '*.egg' -exec rm -f {} +
@@ -37,6 +39,9 @@ dist: clean ## builds source and wheel package
 .PHONY: release
 release: dist ## package and upload a release
 	twine upload dist/*
+
+$(PEX) pex:
+	pex . -e $(PROJ).cli:cli --validate-entry-point -o $(PEX)
 
 .PHONY: lint
 lint: ## check style with pylint
