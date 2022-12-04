@@ -139,3 +139,55 @@ with a Fibonacci function implementation, and then generate a unit test for it::
 
     if __name__ == "__main__":
         unittest.main()
+
+    $ (echo "Add type annotations for this Python code"; cat examples/fib.py) | openai complete - | black - | tee tmp && mv tmp examples/fib.py
+    def Fibonacci(n: int) -> int:
+        if n < 0:
+            print("Incorrect input")
+        # First Fibonacci number is 0
+        elif n == 1:
+            return 0
+        # Second Fibonacci number is 1
+        elif n == 2:
+            return 1
+        else:
+            return Fibonacci(n - 1) + Fibonacci(n - 2)
+
+    $ mypy examples/fib.py
+    examples/fib.py:1: error: Missing return statement  [return]
+    Found 1 error in 1 file (checked 1 source file)
+
+    $ (echo "Fix mypy warnings in this Python code"; cat examples/fib.py; mypy examples/fib.py) | openai complete - | black - | tee tmp && mv tmp examples/fib.py
+    def Fibonacci(n: int) -> int:
+        if n < 0:
+            print("Incorrect input")
+        # First Fibonacci number is 0
+        elif n == 1:
+            return 0
+        # Second Fibonacci number is 1
+        elif n == 2:
+            return 1
+        else:
+            return Fibonacci(n - 1) + Fibonacci(n - 2)
+        return None  # Added return statement
+
+    $ mypy examples/fib.py
+    examples/fib.py:12: error: Incompatible return value type (got "None", expected "int")  [return-value]
+    Found 1 error in 1 file (checked 1 source file)
+
+    $ (echo "Fix mypy warnings in this Python code"; cat examples/fib.py; mypy examples/fib.py) | openai complete - | black - | tee tmp && mv tmp examples/fib.py
+    def Fibonacci(n: int) -> int:
+        if n < 0:
+            print("Incorrect input")
+        # First Fibonacci number is 0
+        elif n == 1:
+            return 0
+        # Second Fibonacci number is 1
+        elif n == 2:
+            return 1
+        else:
+            return Fibonacci(n - 1) + Fibonacci(n - 2)
+        return 0  # Changed return statement to return 0
+
+    $ mypy examples/fib.py
+    Success: no issues found in 1 source file
