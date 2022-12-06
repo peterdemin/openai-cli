@@ -10,7 +10,10 @@ import os
 FILES = ['Makefile', '.github/workflows/main.yml', 'setup.cfg']
 project_name = input("Enter project name: ")
 
-os.rename("src/$(PROJ)", f"src/{project_name}")
+os.mkdir("src")
+os.mkdir(f"src/{project_name}")
+with open (f"src/{project_name}/__init__.py", "wt", encoding="utf-8"):
+	pass
 
 for file in FILES:
 	with open(file, 'rt', encoding='utf-8') as fobj:
