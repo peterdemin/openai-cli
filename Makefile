@@ -5,8 +5,12 @@ PROJ := PROJECTNAME
 PROJ_ROOT := src/$(PROJ)
 
 define RENAME_PROJECT_PYSCRIPT
+import os
+
 FILES = ['Makefile', '.github/workflows/main.yml', 'setup.cfg']
 project_name = input("Enter project name: ")
+
+os.rename("src/$(PROJ)", f"src/{project_name}")
 
 for file in FILES:
 	with open(file, 'rt', encoding='utf-8') as fobj:
@@ -100,6 +104,11 @@ fmt: ## Reformat all Python files
 
 
 ## Skeleton initialization
+.PHONY: init
 init: virtual_env_set install
 	pre-commit install
+
+.PHONY: rename
+rename:
 	@python -c "$$RENAME_PROJECT_PYSCRIPT"
+	$(MAKE) init
