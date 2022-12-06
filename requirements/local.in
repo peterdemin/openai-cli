@@ -3,6 +3,7 @@
 # fmt
 isort
 black
+pre-commit
 
 # docs
 sphinx

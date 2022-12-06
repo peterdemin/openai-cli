@@ -4,6 +4,19 @@ PEX := PROJECTNAME
 PROJ := PROJECTNAME
 PROJ_ROOT := src/$(PROJ)
 
+define RENAME_PROJECT_PYSCRIPT
+FILES = ['Makefile', '.github/workflows/main.yml', 'setup.cfg']
+project_name = input("Enter project name: ")
+
+for file in FILES:
+	with open(file, 'rt', encoding='utf-8') as fobj:
+		content = fobj.read()
+	content = content.replace("$(PROJ)", project_name)
+	with open(file, 'wt', encoding='utf-8') as fobj:
+		fobj.write(content)
+endef
+export RENAME_PROJECT_PYSCRIPT
+
 define PRINT_HELP_PYSCRIPT
 import re, sys
 
@@ -14,6 +27,12 @@ for line in sys.stdin:
 		print("%-10s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
+
+.PHONY: virtual_env_set
+virtual_env_set:
+ifndef VIRTUAL_ENV
+	$(error VIRTUAL_ENV not set)
+endif
 
 .PHONY: help
 help:
@@ -78,3 +97,9 @@ upgrade: ## upgrade versions of third-party dependencies
 fmt: ## Reformat all Python files
 	isort $(PROJ_ROOT)
 	black $(PROJ_ROOT)
+
+
+## Skeleton initialization
+init: virtual_env_set install
+	pre-commit install
+	@python -c "$$RENAME_PROJECT_PYSCRIPT"
