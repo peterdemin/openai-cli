@@ -111,6 +111,6 @@ init: virtual_env_set install
 .PHONY: rename
 rename:
 	@python -c "$$RENAME_PROJECT_PYSCRIPT"
+	$(MAKE) init
 	git add -A .
 	git commit -am "Initialize the project"
-	$(MAKE) init
