@@ -1,20 +1,9 @@
--r base.in
+-r ci.in
 
 # fmt
 isort
 black
-
-# tests
-pytest
-pytest-checkdocs
-pytest-cov
-
-flake8
-Flake8-pyproject
-
-mypy
-pylint
-types-requests
+pre-commit
 
 # docs
 sphinx
@@ -24,7 +13,6 @@ furo
 # packages
 pip-compile-multi
 twine
-bump2version
 pex
 
 # debugging

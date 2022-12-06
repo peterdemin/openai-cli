@@ -1,0 +1,12 @@
+-r base.in
+
+pytest
+pytest-checkdocs
+pytest-cov
+
+flake8
+Flake8-pyproject
+
+mypy
+pylint
+types-requests

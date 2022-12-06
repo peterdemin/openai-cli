@@ -15,6 +15,12 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
+.PHONY: virtual_env_set
+virtual_env_set:
+ifndef VIRTUAL_ENV
+	$(error VIRTUAL_ENV not set)
+endif
+
 .PHONY: help
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -78,3 +84,15 @@ upgrade: ## upgrade versions of third-party dependencies
 fmt: ## Reformat all Python files
 	isort $(PROJ_ROOT)
 	black $(PROJ_ROOT)
+
+## Skeleton initialization
+.PHONY: init
+init: virtual_env_set install
+	pre-commit install
+
+.PHONY: rename
+rename:
+	@python -c "$$RENAME_PROJECT_PYSCRIPT"
+	$(MAKE) init
+	git add -A .
+	git commit -am "Initialize the project"
