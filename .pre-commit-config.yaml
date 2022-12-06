@@ -4,15 +4,14 @@ repos:
     - id: isort
       name: isort
       entry: isort
+      language: system
       require_serial: true
-      language: python
-      language_version: python3
       types_or: [cython, pyi, python]
       args: ['--filter-files']
 
     - id: black
       name: black
       entry: black
-      language: python
+      language: system
       require_serial: true
       types_or: [python, pyi]
