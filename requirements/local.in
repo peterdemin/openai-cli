@@ -1,0 +1,18 @@
+-r ci.in
+
+# fmt
+isort
+black
+
+# docs
+sphinx
+rst.linker
+furo
+
+# packages
+pip-compile-multi
+twine
+
+# debugging
+ipython
+ipdb
