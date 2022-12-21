@@ -30,5 +30,5 @@ class CompletionClient:
         return response.json()["choices"][0]["text"].strip()
 
 
-def build_completion_client(token: str) -> CompletionClient:
-    return CompletionClient(token=token, session=requests.Session())
+def build_completion_client(token: str, model: str) -> CompletionClient:
+    return CompletionClient(token=token, model=model, session=requests.Session())
