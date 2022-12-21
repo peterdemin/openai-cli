@@ -35,11 +35,7 @@ def get_model(model: str) -> str:
     if not model:
         model = os.environ.get("OPENAI_MODEL", "")
     if not model: 
-        raise click.exceptions.UsageError(
-            message=(
-                "OPENAI_MODEL environment variable not set. Defaulting to text-davinci-003"
-            )
-        )
+        print("OPENAI_MODEL environment variable not set. Defaulting to text-davinci-003")
 
 def get_token(token: str) -> str:
     if not token:
