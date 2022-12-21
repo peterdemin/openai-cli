@@ -14,6 +14,7 @@ def cli():
 @cli.command()
 @click.argument("source", type=click.File("rt", encoding="utf-8"))
 @click.option("-t", "--token", default="", help="OpenAI API token")
+@click.option('-m', "--model", default="", help="OpenAI model option")
 def complete(source: io.TextIOWrapper, token: str, model: str) -> None:
     """Return OpenAI completion for a prompt from SOURCE."""
     client = build_completion_client(token = get_token(token), model = get_model(model))
@@ -24,6 +25,7 @@ def complete(source: io.TextIOWrapper, token: str, model: str) -> None:
 
 @cli.command()
 @click.option("-t", "--token", default="", help="OpenAI API token")
+@click.option('-m', "--model", default="", help="OpenAI model option")
 def repl(token: str, model: str) -> None:
     """Start interactive shell session for OpenAI completion API."""
     client = build_completion_client(token = get_token(token), model = get_model(model))
