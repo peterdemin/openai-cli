@@ -15,6 +15,7 @@ class CompletionClient:
     def generate_response(self, prompt: str, model: str = "text-davinci-003") -> str:
         if self.model:
             model = self.model
+        print(model)
         response = self._session.post(
             self.API_URL,
             headers=self._headers,

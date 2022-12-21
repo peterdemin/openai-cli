@@ -38,6 +38,7 @@ def get_model(model: str) -> str:
         model = os.environ.get("OPENAI_MODEL", "")
     if not model: 
         print("OPENAI_MODEL environment variable not set. Defaulting to text-davinci-003")
+    return model
 
 def get_token(token: str) -> str:
     if not token:
