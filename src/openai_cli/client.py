@@ -7,11 +7,14 @@ class CompletionClient:
     TEMPERATURE = 0.1
     TIMEOUT = 60
 
-    def __init__(self, token: str, session: requests.Session) -> None:
+    def __init__(self, token: str, model:str, session: requests.Session) -> None:
         self._headers = {"Authorization": f"Bearer {token}"}
         self._session = session
+        self.model = model
 
     def generate_response(self, prompt: str, model: str = "text-davinci-003") -> str:
+        if self.model:
+            model = self.model
         response = self._session.post(
             self.API_URL,
             headers=self._headers,
