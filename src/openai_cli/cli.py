@@ -14,31 +14,24 @@ def cli():
 @cli.command()
 @click.argument("source", type=click.File("rt", encoding="utf-8"))
 @click.option("-t", "--token", default="", help="OpenAI API token")
-@click.option('-m', "--model", default="", help="OpenAI model option")
+@click.option('-m', "--model", default="text-davinci-003", help="OpenAI model option. (i.e. code-davinci-002)")
 def complete(source: io.TextIOWrapper, token: str, model: str) -> None:
     """Return OpenAI completion for a prompt from SOURCE."""
-    client = build_completion_client(token = get_token(token), model = get_model(model))
+    client = build_completion_client(token = get_token(token), model = model)
     prompt = source.read()
-    result = client.generate_response(prompt)
+    result = client.generate_response(prompt, model)
     click.echo(result)
 
 
 @cli.command()
 @click.option("-t", "--token", default="", help="OpenAI API token")
-@click.option('-m', "--model", default="", help="OpenAI model option")
+@click.option('-m', "--model", default="text-davinci-003", help="OpenAI model option. (i.e. code-davinci-002)")
 def repl(token: str, model: str) -> None:
     """Start interactive shell session for OpenAI completion API."""
-    client = build_completion_client(token = get_token(token), model = get_model(model))
+    client = build_completion_client(token = get_token(token), model = model)
     while True:
-        print(client.generate_response(input("Prompt: ")))
+        print(client.generate_response(input("Prompt: "), model))
         print()
-
-def get_model(model: str) -> str:
-    if not model:
-        model = os.environ.get("OPENAI_MODEL", "")
-    if not model: 
-        print("OPENAI_MODEL environment variable not set. Defaulting to text-davinci-003")
-    return model
 
 def get_token(token: str) -> str:
     if not token:
