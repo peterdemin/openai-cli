@@ -8,17 +8,17 @@
 -r base.txt
 astroid==2.12.13
     # via pylint
-attrs==22.1.0
+attrs==22.2.0
     # via pytest
 build==0.9.0
     # via pytest-checkdocs
-coverage[toml]==6.5.0
+coverage[toml]==7.0.1
     # via pytest-cov
 dill==0.3.6
     # via pylint
 docutils==0.19
     # via pytest-checkdocs
-exceptiongroup==1.0.4
+exceptiongroup==1.1.0
     # via pytest
 flake8==6.0.0
     # via
@@ -26,11 +26,11 @@ flake8==6.0.0
     #   flake8-pyproject
 flake8-pyproject==1.2.2
     # via -r requirements/ci.in
-importlib-metadata==5.1.0
+importlib-metadata==5.2.0
     # via pytest-checkdocs
 iniconfig==1.1.1
     # via pytest
-isort==5.10.1
+isort==5.11.4
     # via pylint
 lazy-object-proxy==1.8.0
     # via astroid
@@ -42,13 +42,13 @@ mypy==0.991
     # via -r requirements/ci.in
 mypy-extensions==0.4.3
     # via mypy
-packaging==21.3
+packaging==22.0
     # via
     #   build
     #   pytest
 pep517==0.13.0
     # via build
-platformdirs==2.5.4
+platformdirs==2.6.2
     # via pylint
 pluggy==1.0.0
     # via pytest
@@ -56,10 +56,8 @@ pycodestyle==2.10.0
     # via flake8
 pyflakes==3.0.1
     # via flake8
-pylint==2.15.8
+pylint==2.15.9
     # via -r requirements/ci.in
-pyparsing==3.0.9
-    # via packaging
 pytest==7.2.0
     # via
     #   -r requirements/ci.in
@@ -78,7 +76,7 @@ tomli==2.0.1
     #   pytest
 tomlkit==0.11.6
     # via pylint
-types-requests==2.28.11.5
+types-requests==2.28.11.7
     # via -r requirements/ci.in
 types-urllib3==1.26.25.4
     # via types-requests

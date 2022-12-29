@@ -18,7 +18,7 @@ backcall==0.2.0
     # via ipython
 beautifulsoup4==4.11.1
     # via furo
-black==22.10.0
+black==22.12.0
     # via -r requirements/local.in
 bleach==5.0.1
     # via readme-renderer
@@ -34,15 +34,17 @@ distlib==0.3.6
     # via virtualenv
 executing==1.2.0
     # via stack-data
-filelock==3.8.2
+filelock==3.9.0
     # via virtualenv
-furo==2022.9.29
+furo==2022.12.7
     # via -r requirements/local.in
-identify==2.5.9
+identify==2.5.11
     # via pre-commit
 imagesize==1.4.1
     # via sphinx
-ipdb==0.13.9
+importlib-resources==5.10.2
+    # via keyring
+ipdb==0.13.11
     # via -r requirements/local.in
 ipython==8.7.0
     # via
@@ -54,7 +56,7 @@ jedi==0.18.2
     # via ipython
 jinja2==3.1.2
     # via sphinx
-keyring==23.11.0
+keyring==23.13.1
     # via twine
 markupsafe==2.1.1
     # via jinja2
@@ -66,9 +68,9 @@ nodeenv==1.7.0
     # via pre-commit
 parso==0.8.3
     # via jedi
-pathspec==0.10.2
+pathspec==0.10.3
     # via black
-pex==2.1.117
+pex==2.1.119
     # via -r requirements/local.in
 pexpect==4.8.0
     # via ipython
@@ -76,13 +78,13 @@ pickleshare==0.7.5
     # via ipython
 pip-compile-multi==2.6.1
     # via -r requirements/local.in
-pip-tools==6.11.0
+pip-tools==6.12.1
     # via pip-compile-multi
 pkginfo==1.9.2
     # via twine
-pre-commit==2.20.0
+pre-commit==2.21.0
     # via -r requirements/local.in
-prompt-toolkit==3.0.33
+prompt-toolkit==3.0.36
     # via ipython
 ptyprocess==0.7.0
     # via pexpect
@@ -97,7 +99,7 @@ pygments==2.13.0
     #   sphinx
 python-dateutil==2.8.2
     # via rst-linker
-pytz==2022.6
+pytz==2022.7
     # via babel
 pyyaml==6.0
     # via pre-commit
@@ -120,7 +122,7 @@ snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.3.2.post1
     # via beautifulsoup4
-sphinx==5.3.0
+sphinx==6.0.0
     # via
     #   -r requirements/local.in
     #   furo
@@ -141,13 +143,9 @@ sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
 stack-data==0.6.2
     # via ipython
-toml==0.10.2
-    # via
-    #   ipdb
-    #   pre-commit
 toposort==1.7
     # via pip-compile-multi
-traitlets==5.6.0
+traitlets==5.8.0
     # via
     #   ipython
     #   matplotlib-inline
@@ -167,6 +165,5 @@ pip==22.3.1
     # via pip-tools
 setuptools==65.6.3
     # via
-    #   ipdb
     #   nodeenv
     #   pip-tools
