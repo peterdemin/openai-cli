@@ -1,27 +1,33 @@
 import requests
 
-
 class CompletionClient:
     API_URL = "https://api.openai.com/v1/completions"
     MAX_TOKENS = 1000
     TEMPERATURE = 0.1
     TIMEOUT = 60
 
-    def __init__(self, token: str, session: requests.Session) -> None:
+    def __init__(self, token: str, session: requests.Session, proxy: str = None) -> None:
         self._headers = {"Authorization": f"Bearer {token}"}
         self._session = session
+        self._proxy = proxy
+
+        if len(self._proxy) > 0:
+            proxies = {
+                "http": f"http://{self._proxy}",
+                "https": f"http://{self._proxy}",
+            }
+            self._session.proxies = proxies
 
     def generate_response(self, prompt: str, model: str) -> str:
         """Generates response from a given prompt using a specified model.
-
         Args:
             prompt: The prompt to generate a response for.
             model: The model to use for generating the response.
                    Defaults to "text-davinci-003".
-
         Returns:
             The generated response.
         """
+        
         response = self._session.post(
             self.API_URL,
             headers=self._headers,
@@ -37,5 +43,5 @@ class CompletionClient:
         return response.json()["choices"][0]["text"].strip()
 
 
-def build_completion_client(token: str) -> CompletionClient:
-    return CompletionClient(token=token, session=requests.Session())
+def build_completion_client(token: str, proxy: str = None) -> CompletionClient:
+    return CompletionClient(token=token, session=requests.Session(), proxy=proxy)
