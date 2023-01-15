@@ -12,12 +12,10 @@ class CompletionClient:
         self._proxy = proxy
 
         if len(self._proxy) > 0:
-            proxies = {
+            self._session.proxies = {
                 "http": f"http://{self._proxy}",
                 "https": f"http://{self._proxy}",
             }
-            self._session.proxies = proxies
-        self._api_url = api_url
 
 
     def generate_response(self, prompt: str, model: str) -> str:

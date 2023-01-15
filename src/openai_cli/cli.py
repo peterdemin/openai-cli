@@ -3,7 +3,7 @@ import os
 import re
 import click
 
-from openai_cli.client import build_completion_client
+from client import build_completion_client
 
 
 @click.group()
@@ -13,14 +13,14 @@ def cli():
 
 def check_proxy(proxy: str) -> str:
     if not proxy:
-        proxy = os.environ.get("OPENAI_PROXY_SERVER", "")
+        proxy = os.environ.get("HTTP_PROXY", "")
     if not proxy:
         return ""
     else:
         match = re.match(r"^(?:(?P<username>\w+):(?P<password>\w+)@)?(?P<host>\S+):(?P<port>\d+)$", proxy)
         if not match:
             raise click.exceptions.UsageError(
-                message="Invalid proxy format. It should be in format of 'username:password@host:port' or 'host:port'"
+                message="Invalid proxy format. The format should be \"username:password@ip:port\" or \"ip:port\""
             )
         return proxy
 
@@ -31,7 +31,7 @@ def check_proxy(proxy: str) -> str:
 @click.option(
     "-m", "--model", default="text-davinci-003", help="OpenAI model option. (i.e. code-davinci-002)"
 )
-@click.option("-p", "--proxy", default=None, help="Define proxy server, via this option or \"OPENAI_PROXY_SERVER\" environment variable. In format of 'username:password@host:port' or 'host:port'")
+@click.option("-p", "--proxy", default=None, help="Define proxy server, via this option or \"HTTP_PROYY\" environment variable. The format is either \"username:password@ip:port\" or \"ip:port\"")
 def complete(source: io.TextIOWrapper, token: str, model: str, proxy: str) -> None:
     """Return OpenAI completion for a prompt from SOURCE."""
     client = build_completion_client(token=get_token(token), proxy=check_proxy(proxy), api_url=get_api_url())
@@ -46,7 +46,7 @@ def complete(source: io.TextIOWrapper, token: str, model: str, proxy: str) -> No
     "-m", "--model", default="text-davinci-003", help="OpenAI model option. (i.e. code-davinci-002)"
 )
 
-@click.option("-p", "--proxy", default=None, help="Define proxy server, via this option or \"OPENAI_PROXY_SERVER\" environment variable. In format of 'username:password@host:port' or 'host:port'")
+@click.option("-p", "--proxy", default=None, help="Define proxy server, via this option or \"HTTP_PROXY\" environment variable. The format is either \"username:password@ip:port\" or \"ip:port\"")
 def repl(token: str, model: str, proxy: str) -> None:
     """Start interactive shell session for OpenAI completion API."""
     client = build_completion_client(token=get_token(token), proxy=check_proxy(proxy), api_url=get_api_url())
