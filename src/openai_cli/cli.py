@@ -32,11 +32,16 @@ def complete(source: io.TextIOWrapper, token: str, model: str) -> None:
 )
 def repl(token: str, model: str) -> None:
     """Start interactive shell session for OpenAI completion API."""
-    client = build_completion_client(token=get_token(token))
+    client = build_completion_client(token=get_token(token), api_url=get_api_url())
     while True:
         print(client.generate_response(input("Prompt: "), model))
         print()
 
+def get_api_url() -> str:
+    url = os.environ.get("OPENAI_API_URL", "")
+    if not url:
+        url = "https://api.openai.com/v1/completions"
+    return token
 
 def get_token(token: str) -> str:
     if not token:
