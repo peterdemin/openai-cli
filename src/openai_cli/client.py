@@ -2,14 +2,14 @@ import requests
 
 
 class CompletionClient:
-    API_URL = "https://api.openai.com/v1/completions"
     MAX_TOKENS = 1000
     TEMPERATURE = 0.1
     TIMEOUT = 60
 
-    def __init__(self, token: str, session: requests.Session) -> None:
+    def __init__(self, token: str, session: requests.Session, api_url: str) -> None:
         self._headers = {"Authorization": f"Bearer {token}"}
         self._session = session
+        self._api_url = api_url
 
     def generate_response(self, prompt: str, model: str) -> str:
         """Generates response from a given prompt using a specified model.
@@ -22,8 +22,11 @@ class CompletionClient:
         Returns:
             The generated response.
         """
+        
+        
+        
         response = self._session.post(
-            self.API_URL,
+            self._api_url,
             headers=self._headers,
             json={
                 "prompt": prompt,
@@ -37,5 +40,5 @@ class CompletionClient:
         return response.json()["choices"][0]["text"].strip()
 
 
-def build_completion_client(token: str) -> CompletionClient:
-    return CompletionClient(token=token, session=requests.Session())
+def build_completion_client(token: str, api_url: str) -> CompletionClient:
+    return CompletionClient(token=token, session=requests.Session(), api_url=api_url)
