@@ -61,6 +61,12 @@ Build a standalone binary using pex and move it into PATH::
     $ openai repl
     Prompt:
 
+Alternative API URL
+-------------------
+
+CLI invokes https://api.openai.com/v1/completions by default.
+To override the endpoint URL, set ``OPENAI_API_URL`` environment variable.
+
 Example usage
 -------------
 

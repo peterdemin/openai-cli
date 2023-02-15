@@ -1,3 +1,13 @@
+0.0.3 - Feb 15, 2023
+--------------------
+
+* Allow overriding API URL through ``OPENAI_API_URL`` environment variable.
+  Thanks to `Stefano d'Antonio`_, `Issue #5`, `PR #6`_.
+
+.. _`Stefano d'Antonio`: https://github.com/UnoSD
+.. _`Issue #5`: https://github.com/peterdemin/openai-cli/issues/5
+.. _`PR #6`: https://github.com/peterdemin/openai-cli/pull/6
+
 0.0.2 - Dec 29, 2022
 --------------------
 
