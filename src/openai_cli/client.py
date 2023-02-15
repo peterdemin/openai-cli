@@ -22,9 +22,6 @@ class CompletionClient:
         Returns:
             The generated response.
         """
-        
-        
-        
         response = self._session.post(
             self._api_url,
             headers=self._headers,

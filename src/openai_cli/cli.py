@@ -19,7 +19,7 @@ def cli():
 )
 def complete(source: io.TextIOWrapper, token: str, model: str) -> None:
     """Return OpenAI completion for a prompt from SOURCE."""
-    client = build_completion_client(token=get_token(token))
+    client = build_completion_client(token=get_token(token), api_url=get_api_url())
     prompt = source.read()
     result = client.generate_response(prompt, model)
     click.echo(result)
@@ -37,11 +37,10 @@ def repl(token: str, model: str) -> None:
         print(client.generate_response(input("Prompt: "), model))
         print()
 
+
 def get_api_url() -> str:
-    url = os.environ.get("OPENAI_API_URL", "")
-    if not url:
-        url = "https://api.openai.com/v1/completions"
-    return token
+    return os.environ.get("OPENAI_API_URL", "https://api.openai.com/v1/completions")
+
 
 def get_token(token: str) -> str:
     if not token:

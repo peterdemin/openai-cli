@@ -7,10 +7,14 @@ from openai_cli.client import CompletionClient, build_completion_client
 
 
 class TestCompletionClient(unittest.TestCase):
+    _API_URL = "api_url"
+
     def setUp(self):
         self._token = "token"
         self._session = mock.Mock(spec_set=requests.Session)
-        self._completion_client = CompletionClient(token=self._token, session=self._session)
+        self._completion_client = CompletionClient(
+            token=self._token, session=self._session, api_url=self._API_URL
+        )
 
     def test_generate_response(self):
         # Set up mock response
@@ -23,7 +27,7 @@ class TestCompletionClient(unittest.TestCase):
 
         # Verify that the request was made with the correct parameters
         self._session.post.assert_called_with(
-            self._completion_client.API_URL,
+            self._API_URL,
             headers={"Authorization": "Bearer token"},
             json={
                 "prompt": prompt,
@@ -37,7 +41,7 @@ class TestCompletionClient(unittest.TestCase):
 
 class TestBuildCompletionClient(unittest.TestCase):
     def test_build_completion_client(self):
-        completion_client = build_completion_client("token")
+        completion_client = build_completion_client("token", api_url="api_url")
         self.assertIsInstance(completion_client, CompletionClient)
 
 
