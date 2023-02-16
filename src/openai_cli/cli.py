@@ -1,6 +1,7 @@
 import io
 import os
 import re
+import re
 import click
 
 from client import build_completion_client
