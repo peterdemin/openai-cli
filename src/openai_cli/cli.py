@@ -3,7 +3,7 @@ import os
 import re
 import click
 
-from client import build_completion_client
+from openai_cli.client import build_completion_client
 
 
 @click.group()
