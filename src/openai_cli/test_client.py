@@ -1,49 +1,37 @@
 import unittest
-from unittest import mock
+from unittest.mock import patch, MagicMock
+import openai
+from openai_cli.client import generate_response, initialize_openai_client
 
-import requests
+class TestClient(unittest.TestCase):
+    @patch('openai_cli.client.openai.chat.completions.create')
+    def test_generate_response_success(self, mock_create):
+        mock_response = MagicMock()
+        mock_response.choices[0].message.content = "Mocked response"
+        mock_create.return_value = mock_response
 
-from openai_cli.client import CompletionClient, build_completion_client
+        response = generate_response("Test prompt")
+        self.assertEqual(response, "Mocked response")
+        mock_create.assert_called_once()
 
+    @patch('openai_cli.client.openai.chat.completions.create')
+    def test_generate_response_error(self, mock_create):
+        mock_create.side_effect = Exception("API Error")
 
-class TestCompletionClient(unittest.TestCase):
-    _API_URL = "api_url"
+        with self.assertRaises(Exception):
+            generate_response("Test prompt")
 
-    def setUp(self):
-        self._token = "token"
-        self._session = mock.Mock(spec_set=requests.Session)
-        self._completion_client = CompletionClient(
-            token=self._token, session=self._session, api_url=self._API_URL
-        )
+    @patch('openai_cli.client.get_openai_api_key')
+    def test_initialize_openai_client_success(self, mock_get_key):
+        mock_get_key.return_value = "test_api_key"
+        initialize_openai_client()
+        self.assertEqual(openai.api_key, "test_api_key")
 
-    def test_generate_response(self):
-        # Set up mock response
-        self._session.post.return_value.json.return_value = {"choices": [{"text": "response"}]}
+    @patch('openai_cli.client.get_openai_api_key')
+    def test_initialize_openai_client_no_key(self, mock_get_key):
+        mock_get_key.return_value = ""
+        with self.assertRaises(openai.OpenAIError):
+            initialize_openai_client()
 
-        prompt = "prompt"
-        model = "model"
-        response = self._completion_client.generate_response(prompt=prompt, model=model)
-        self.assertEqual(response, "response")
-
-        # Verify that the request was made with the correct parameters
-        self._session.post.assert_called_with(
-            self._API_URL,
-            headers={"Authorization": "Bearer token"},
-            json={
-                "prompt": prompt,
-                "model": model,
-                "max_tokens": self._completion_client.MAX_TOKENS,
-                "temperature": self._completion_client.TEMPERATURE,
-            },
-            timeout=self._completion_client.TIMEOUT,
-        )
-
-
-class TestBuildCompletionClient(unittest.TestCase):
-    def test_build_completion_client(self):
-        completion_client = build_completion_client("token", api_url="api_url")
-        self.assertIsInstance(completion_client, CompletionClient)
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
