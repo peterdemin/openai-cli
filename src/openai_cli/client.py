@@ -1,41 +1,80 @@
-import requests
+from typing import Any
+
+import openai
+
+from .config import DEFAULT_MODEL, MAX_TOKENS, SYSTEM_MESSAGE, TEMPERATURE, get_openai_api_key
 
 
-class CompletionClient:
-    MAX_TOKENS = 1000
-    TEMPERATURE = 0.1
-    TIMEOUT = 60
+def initialize_openai_client() -> None:
+    """
+    Initialize the OpenAI client with the API key from the environment.
 
-    def __init__(self, token: str, session: requests.Session, api_url: str) -> None:
-        self._headers = {"Authorization": f"Bearer {token}"}
-        self._session = session
-        self._api_url = api_url
-
-    def generate_response(self, prompt: str, model: str) -> str:
-        """Generates response from a given prompt using a specified model.
-
-        Args:
-            prompt: The prompt to generate a response for.
-            model: The model to use for generating the response.
-                   Defaults to "text-davinci-003".
-
-        Returns:
-            The generated response.
-        """
-        response = self._session.post(
-            self._api_url,
-            headers=self._headers,
-            json={
-                "prompt": prompt,
-                "model": model,
-                "max_tokens": self.MAX_TOKENS,
-                "temperature": self.TEMPERATURE,
-            },
-            timeout=self.TIMEOUT,
+    Raises:
+        openai.OpenAIError: If no API key is found in the environment.
+    """
+    api_key = get_openai_api_key()
+    if not api_key:
+        raise openai.OpenAIError(
+            "The API key must be set in the OPENAI_API_KEY environment variable"
         )
-        response.raise_for_status()
-        return response.json()["choices"][0]["text"].strip()
+    openai.api_key = api_key
 
 
-def build_completion_client(token: str, api_url: str) -> CompletionClient:
-    return CompletionClient(token=token, session=requests.Session(), api_url=api_url)
+def generate_response(
+    prompt: str,
+    model: str = DEFAULT_MODEL,
+    max_tokens: int = MAX_TOKENS,
+    temperature: float = TEMPERATURE,
+    system_message: str = SYSTEM_MESSAGE,
+) -> str:
+    """
+    Generates a response from a given prompt using a specified model.
+
+    Args:
+        prompt (str): The prompt to generate a response for.
+        model (str): The model to use for generating the response.
+        max_tokens (int): The maximum number of tokens in the response.
+        temperature (float): Controls randomness in the response.
+        system_message (str): The system message to set the context.
+
+    Returns:
+        str: The generated response.
+
+    Raises:
+        openai.OpenAIError: If there's an error with the OpenAI API call.
+    """
+    if not openai.api_key:
+        initialize_openai_client()
+
+    try:
+        response = openai.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": prompt},
+            ],
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
+        return _extract_content(response)
+    except openai.OpenAIError as e:
+        raise openai.OpenAIError(f"Error generating response: {str(e)}") from e
+
+
+def _extract_content(response: Any) -> str:
+    """
+    Extracts the content from the API response.
+
+    Args:
+        response (Any): The API response object.
+
+    Returns:
+        str: The extracted content.
+
+    Raises:
+        ValueError: If the response format is unexpected.
+    """
+    try:
+        return response.choices[0].message.content.strip()
+    except AttributeError as e:
+        raise ValueError(f"Unexpected response format: {str(e)}") from e
