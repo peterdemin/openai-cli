@@ -1,57 +1,52 @@
 import io
-import os
-
 import click
-
-from openai_cli.client import build_completion_client
+from typing import Optional
+from openai_cli.client import generate_response
+from openai_cli.config import DEFAULT_MODEL, set_openai_api_key
 
 
 @click.group()
-def cli():
-    pass
+@click.option('-m', '--model', default=DEFAULT_MODEL, help=f"OpenAI model option. (default: {DEFAULT_MODEL})")
+@click.option("-t", "--token", help="OpenAI API token")
+@click.pass_context
+def cli(ctx, model: str, token: Optional[str]):
+    """CLI for interacting with OpenAI's completion API."""
+    ctx.ensure_object(dict)
+    ctx.obj['model'] = model
+    if token:
+        set_openai_api_key(token)
 
 
 @cli.command()
 @click.argument("source", type=click.File("rt", encoding="utf-8"))
-@click.option("-t", "--token", default="", help="OpenAI API token")
-@click.option(
-    "-m", "--model", default="text-davinci-003", help="OpenAI model option. (i.e. code-davinci-002)"
-)
-def complete(source: io.TextIOWrapper, token: str, model: str) -> None:
+@click.pass_context
+def complete(ctx, source: io.TextIOWrapper) -> None:
     """Return OpenAI completion for a prompt from SOURCE."""
-    client = build_completion_client(token=get_token(token), api_url=get_api_url())
     prompt = source.read()
-    result = client.generate_response(prompt, model)
+    result = generate_response(prompt, ctx.obj['model'])
     click.echo(result)
 
 
 @cli.command()
-@click.option("-t", "--token", default="", help="OpenAI API token")
-@click.option(
-    "-m", "--model", default="text-davinci-003", help="OpenAI model option. (i.e. code-davinci-002)"
-)
-def repl(token: str, model: str) -> None:
+@click.pass_context
+def repl(ctx) -> None:
     """Start interactive shell session for OpenAI completion API."""
-    client = build_completion_client(token=get_token(token), api_url=get_api_url())
+    click.echo(f"Interactive shell started. Using model: {ctx.obj['model']}")
+    click.echo("Type 'exit' or use Ctrl-D to exit.")
+
     while True:
-        print(client.generate_response(input("Prompt: "), model))
-        print()
+        try:
+            prompt = click.prompt("Prompt", type=str)
+            if prompt.lower() == 'exit':
+                break
+            result = generate_response(prompt, ctx.obj['model'])
+            click.echo(f"\nResponse:\n{result}\n")
+        except click.exceptions.Abort:
+            break
+        except Exception as e:
+            click.echo(f"An error occurred: {str(e)}", err=True)
 
-
-def get_api_url() -> str:
-    return os.environ.get("OPENAI_API_URL", "https://api.openai.com/v1/completions")
-
-
-def get_token(token: str) -> str:
-    if not token:
-        token = os.environ.get("OPENAI_API_TOKEN", "")
-    if not token:
-        raise click.exceptions.UsageError(
-            message=(
-                "Either --token option or OPENAI_API_TOKEN environment variable must be provided"
-            )
-        )
-    return token
+    click.echo("Interactive shell ended.")
 
 
 if __name__ == "__main__":
