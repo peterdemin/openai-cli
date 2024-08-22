@@ -1,2 +1,1 @@
-requests
-click
+openai==1.42.0
