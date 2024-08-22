@@ -6,86 +6,114 @@
 #    pip-compile-multi
 #
 -r base.txt
-astroid==2.14.2
+alabaster==1.0.0
+    # via sphinx
+astroid==3.2.4
     # via pylint
-attrs==22.2.0
-    # via pytest
-build==0.10.0
-    # via pytest-checkdocs
-coverage[toml]==7.1.0
+babel==2.16.0
+    # via sphinx
+build[virtualenv]==1.2.1
+    # via jaraco-packaging
+charset-normalizer==3.3.2
+    # via requests
+coverage[toml]==7.6.1
     # via pytest-cov
-dill==0.3.6
+dill==0.3.8
     # via pylint
-docutils==0.19
-    # via pytest-checkdocs
-exceptiongroup==1.1.0
-    # via pytest
-flake8==6.0.0
+distlib==0.3.8
+    # via virtualenv
+docutils==0.21.2
+    # via
+    #   pytest-checkdocs
+    #   sphinx
+domdf-python-tools==3.9.0
+    # via jaraco-packaging
+filelock==3.15.4
+    # via virtualenv
+flake8==7.1.1
     # via
     #   -r requirements/ci.in
     #   flake8-pyproject
-flake8-pyproject==1.2.2
+flake8-pyproject==1.2.3
     # via -r requirements/ci.in
-importlib-metadata==6.0.0
-    # via pytest-checkdocs
+imagesize==1.4.1
+    # via sphinx
 iniconfig==2.0.0
     # via pytest
-isort==5.12.0
+isort==5.13.2
     # via pylint
-lazy-object-proxy==1.9.0
-    # via astroid
+jaraco-context==6.0.1
+    # via jaraco-packaging
+jaraco-packaging==10.2.3
+    # via pytest-checkdocs
+jinja2==3.1.4
+    # via sphinx
+markupsafe==2.1.5
+    # via jinja2
 mccabe==0.7.0
     # via
     #   flake8
     #   pylint
-mypy==1.0.0
+mypy==1.11.1
     # via -r requirements/ci.in
 mypy-extensions==1.0.0
     # via mypy
-packaging==23.0
+natsort==8.4.0
+    # via domdf-python-tools
+packaging==24.1
     # via
     #   build
     #   pytest
-platformdirs==3.0.0
-    # via pylint
-pluggy==1.0.0
+    #   sphinx
+platformdirs==4.2.2
+    # via
+    #   pylint
+    #   virtualenv
+pluggy==1.5.0
     # via pytest
-pycodestyle==2.10.0
+pycodestyle==2.12.1
     # via flake8
-pyflakes==3.0.1
+pyflakes==3.2.0
     # via flake8
-pylint==2.16.2
+pygments==2.18.0
+    # via sphinx
+pylint==3.2.6
     # via -r requirements/ci.in
-pyproject-hooks==1.0.0
+pyproject-hooks==1.1.0
     # via build
-pytest==7.2.1
+pytest==8.3.2
     # via
     #   -r requirements/ci.in
     #   pytest-cov
-pytest-checkdocs==2.9.0
+pytest-checkdocs==2.13.0
     # via -r requirements/ci.in
-pytest-cov==4.0.0
+pytest-cov==5.0.0
     # via -r requirements/ci.in
-tomli==2.0.1
-    # via
-    #   build
-    #   coverage
-    #   flake8-pyproject
-    #   mypy
-    #   pylint
-    #   pytest
-tomlkit==0.11.6
+requests==2.32.3
+    # via sphinx
+snowballstemmer==2.2.0
+    # via sphinx
+sphinx==8.0.2
+    # via jaraco-packaging
+sphinxcontrib-applehelp==2.0.0
+    # via sphinx
+sphinxcontrib-devhelp==2.0.0
+    # via sphinx
+sphinxcontrib-htmlhelp==2.1.0
+    # via sphinx
+sphinxcontrib-jsmath==1.0.1
+    # via sphinx
+sphinxcontrib-qthelp==2.0.0
+    # via sphinx
+sphinxcontrib-serializinghtml==2.0.0
+    # via sphinx
+tomlkit==0.13.2
     # via pylint
-types-requests==2.28.11.13
+types-requests==2.32.0.20240712
     # via -r requirements/ci.in
-types-urllib3==1.26.25.6
-    # via types-requests
-typing-extensions==4.5.0
+urllib3==2.2.2
     # via
-    #   astroid
-    #   mypy
-    #   pylint
-wrapt==1.14.1
-    # via astroid
-zipp==3.13.0
-    # via importlib-metadata
+    #   requests
+    #   types-requests
+virtualenv==20.26.3
+    # via build
