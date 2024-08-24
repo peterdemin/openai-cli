@@ -12,7 +12,7 @@ furo
 
 # packages
 pip-compile-multi
-twine
+# twine
 pex
 
 # debugging
