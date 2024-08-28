@@ -87,11 +87,6 @@ pytest-checkdocs==2.13.0
     # via -r requirements/ci.in
 pytest-cov==5.0.0
     # via -r requirements/ci.in
-<<<<<<< HEAD
-requests==2.32.3
-    # via sphinx
-=======
->>>>>>> main
 snowballstemmer==2.2.0
     # via sphinx
 sphinx==8.0.2
@@ -112,16 +107,9 @@ tomlkit==0.13.2
     # via pylint
 types-requests==2.32.0.20240712
     # via -r requirements/ci.in
-<<<<<<< HEAD
-urllib3==2.2.2
-    # via
-    #   requests
-    #   types-requests
-=======
 typing-extensions==4.12.2
     # via
     #   domdf-python-tools
     #   mypy
->>>>>>> main
 virtualenv==20.26.3
     # via build
