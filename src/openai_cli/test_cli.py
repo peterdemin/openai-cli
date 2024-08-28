@@ -2,7 +2,10 @@ import unittest
 from unittest.mock import patch, MagicMock
 from click.testing import CliRunner
 from openai_cli.cli import cli
+from openai_cli.config import DEFAULT_MODEL, MAX_TOKENS, TEMPERATURE
 
+# Mock the API_BASE_URL to prevent actual API calls
+@patch('openai_cli.client.API_BASE_URL', 'http://mock-api-url')
 class TestCLI(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
@@ -13,7 +16,7 @@ class TestCLI(unittest.TestCase):
         result = self.runner.invoke(cli, ['complete', '-'], input='Test prompt')
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Mocked response", result.output)
-        mock_generate.assert_called_once_with('Test prompt', 'gpt-4o-mini')
+        mock_generate.assert_called_once_with('Test prompt', conversation_history=[], model=DEFAULT_MODEL, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
 
     @patch('openai_cli.cli.generate_response')
     def test_repl_command(self, mock_generate):
@@ -22,19 +25,39 @@ class TestCLI(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Mocked response", result.output)
         self.assertIn("Interactive shell ended.", result.output)
+        mock_generate.assert_called_once_with('Test prompt', conversation_history=[], model=DEFAULT_MODEL, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
 
-    def test_model_option(self):
-        with patch('openai_cli.cli.generate_response') as mock_generate:
-            mock_generate.return_value = "Mocked response"
-            result = self.runner.invoke(cli, ['-m', 'gpt-3.5-turbo', 'complete', '-'], input='Test prompt')
-            self.assertEqual(result.exit_code, 0)
-            mock_generate.assert_called_once_with('Test prompt', 'gpt-3.5-turbo')
+    @patch('openai_cli.cli.generate_response')
+    def test_model_option(self, mock_generate):
+        mock_generate.return_value = "Mocked response"
+        result = self.runner.invoke(cli, ['-m', 'gpt-3.5-turbo', 'complete', '-'], input='Test prompt')
+        self.assertEqual(result.exit_code, 0)
+        mock_generate.assert_called_once_with('Test prompt', conversation_history=[], model='gpt-3.5-turbo', max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
+
+    @patch('openai_cli.cli.generate_response')
+    def test_max_tokens_option(self, mock_generate):
+        mock_generate.return_value = "Mocked response"
+        result = self.runner.invoke(cli, ['-k', '100', 'complete', '-'], input='Test prompt')
+        self.assertEqual(result.exit_code, 0)
+        mock_generate.assert_called_once_with('Test prompt', conversation_history=[], model=DEFAULT_MODEL, max_tokens=100, temperature=TEMPERATURE)
+
+    @patch('openai_cli.cli.generate_response')
+    def test_temperature_option(self, mock_generate):
+        mock_generate.return_value = "Mocked response"
+        result = self.runner.invoke(cli, ['-p', '0.8', 'complete', '-'], input='Test prompt')
+        self.assertEqual(result.exit_code, 0)
+        mock_generate.assert_called_once_with('Test prompt', conversation_history=[], model=DEFAULT_MODEL, max_tokens=MAX_TOKENS, temperature=0.8)
 
     @patch('openai_cli.cli.set_openai_api_key')
-    def test_token_option(self, mock_set_key):
+    @patch('openai_cli.cli.generate_response')
+    def test_token_option(self, mock_generate, mock_set_key):
+        mock_generate.return_value = "Mocked response"
         result = self.runner.invoke(cli, ['-t', 'test_token', 'complete', '-'], input='Test prompt')
         self.assertEqual(result.exit_code, 0)
         mock_set_key.assert_called_once_with('test_token')
+        mock_generate.assert_called_once_with('Test prompt', conversation_history=[], model=DEFAULT_MODEL, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
+        self.assertIn("Mocked response", result.output)
+
 
 if __name__ == '__main__':
     unittest.main()
