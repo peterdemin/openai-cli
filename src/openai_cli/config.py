@@ -4,6 +4,7 @@ DEFAULT_MODEL = "gpt-4o-mini"
 MAX_TOKENS = 500
 TEMPERATURE = 0.23
 SYSTEM_MESSAGE = "You are a helpful assistant."
+API_BASE_URL = "https://api.openai.com/v1/chat/completions"
 
 
 def get_openai_api_key() -> str:
