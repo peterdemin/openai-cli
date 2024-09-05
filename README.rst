@@ -15,7 +15,7 @@ OpenAI API requires authentication token, which can be obtained on this page:
 https://beta.openai.com/account/api-keys
 
 Provide token to the CLI either through a command-line argument (``-t/--token <TOKEN>``)
-or through an environment variable (``OPENAI_API_TOKEN``).
+or through an environment variable (``OPENAI_API_KEY``).
 
 Usage
 -----

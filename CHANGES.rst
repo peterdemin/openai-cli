@@ -1,3 +1,10 @@
+1.0.0 - Sep 4, 2024
+-------------------
+
+* Complete rewrite by `Tevfik Kadan`_, `PR #13`_.
+
+.. _`Tevfik Kadan`: https://github.com/ktevfik
+
 0.0.3 - Feb 15, 2023
 --------------------
 
