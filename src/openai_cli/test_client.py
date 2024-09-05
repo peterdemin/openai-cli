@@ -1,49 +1,63 @@
 import unittest
-from unittest import mock
-
 import requests
+from unittest.mock import patch, MagicMock, PropertyMock
+from openai_cli.client import generate_response, initialize_session, OpenAIError
 
-from openai_cli.client import CompletionClient, build_completion_client
+class TestClient(unittest.TestCase):
+
+    @patch('openai_cli.client.requests.Session.post')
+    @patch('openai_cli.client.get_openai_api_key', return_value="test_api_key")
+    @patch('openai_cli.client.requests.Session', autospec=True)  # Mocking the Session itself to prevent any real network interaction
+    def test_generate_response_success(self, mock_session_cls, mock_get_key, mock_post):
+        mock_response = MagicMock()
+        mock_response.json.return_value = {
+            'choices': [{'message': {'content': "Mocked response"}}]
+        }
+        mock_response.status_code = 200
+        mock_post.return_value = mock_response
+
+        mock_session = mock_session_cls.return_value
+        mock_session.post = mock_post
+
+        type(mock_session).headers = PropertyMock(return_value={})
+
+        response = generate_response("Test prompt")
+        self.assertEqual(response, "Mocked response")
+        mock_post.assert_called_once()
+
+    @patch('openai_cli.client.requests.Session.post')
+    @patch('openai_cli.client.get_openai_api_key', return_value="test_api_key")
+    @patch('openai_cli.client.requests.Session', autospec=True)
+    def test_generate_response_error(self, mock_session_cls, mock_get_key, mock_post):
+        mock_post.side_effect = requests.RequestException("API Error")
+
+        mock_session = mock_session_cls.return_value
+        mock_session.post = mock_post
+
+        type(mock_session).headers = PropertyMock(return_value={})
+
+        with self.assertRaises(OpenAIError):
+            generate_response("Test prompt")
+
+    @patch('openai_cli.client.get_openai_api_key')
+    @patch('openai_cli.client.requests.Session', autospec=True)
+    def test_initialize_session_success(self, mock_session_cls, mock_get_key):
+        mock_get_key.return_value = "test_api_key"
+
+        mock_session = mock_session_cls.return_value
+        mock_session.headers = {}
+
+        session = initialize_session()
+        mock_session_cls.assert_called_once()
+        self.assertEqual(session.headers["Authorization"], "Bearer test_api_key")
+
+    @patch('openai_cli.client.get_openai_api_key')
+    def test_initialize_session_no_key(self, mock_get_key):
+        mock_get_key.return_value = ""
+
+        with self.assertRaises(OpenAIError):
+            initialize_session()
 
 
-class TestCompletionClient(unittest.TestCase):
-    _API_URL = "api_url"
-
-    def setUp(self):
-        self._token = "token"
-        self._session = mock.Mock(spec_set=requests.Session)
-        self._completion_client = CompletionClient(
-            token=self._token, session=self._session, api_url=self._API_URL
-        )
-
-    def test_generate_response(self):
-        # Set up mock response
-        self._session.post.return_value.json.return_value = {"choices": [{"text": "response"}]}
-
-        prompt = "prompt"
-        model = "model"
-        response = self._completion_client.generate_response(prompt=prompt, model=model)
-        self.assertEqual(response, "response")
-
-        # Verify that the request was made with the correct parameters
-        self._session.post.assert_called_with(
-            self._API_URL,
-            headers={"Authorization": "Bearer token"},
-            json={
-                "prompt": prompt,
-                "model": model,
-                "max_tokens": self._completion_client.MAX_TOKENS,
-                "temperature": self._completion_client.TEMPERATURE,
-            },
-            timeout=self._completion_client.TIMEOUT,
-        )
-
-
-class TestBuildCompletionClient(unittest.TestCase):
-    def test_build_completion_client(self):
-        completion_client = build_completion_client("token", api_url="api_url")
-        self.assertIsInstance(completion_client, CompletionClient)
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

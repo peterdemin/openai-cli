@@ -14,6 +14,11 @@ black==24.8.0
     # via -r requirements/local.in
 cfgv==3.4.0
     # via pre-commit
+click==8.1.7
+    # via
+    #   black
+    #   pip-compile-multi
+    #   pip-tools
 decorator==5.1.1
     # via
     #   ipdb
@@ -40,7 +45,7 @@ parso==0.8.4
     # via jedi
 pathspec==0.12.1
     # via black
-pex==2.16.2
+pex==2.17.0
     # via -r requirements/local.in
 pexpect==4.9.0
     # via ipython
@@ -78,7 +83,5 @@ wheel==0.44.0
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==24.2
-    # via pip-tools
-setuptools==73.0.1
-    # via pip-tools
+# pip
+# setuptools

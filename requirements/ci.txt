@@ -52,7 +52,7 @@ mccabe==0.7.0
     # via
     #   flake8
     #   pylint
-mypy==1.11.1
+mypy==1.11.2
     # via -r requirements/ci.in
 mypy-extensions==1.0.0
     # via mypy
