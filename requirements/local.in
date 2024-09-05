@@ -5,10 +5,6 @@ isort
 black
 pre-commit
 
-# docs
-sphinx
-furo
-
 # packages
 pip-compile-multi
 # twine
