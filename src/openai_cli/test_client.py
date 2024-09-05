@@ -1,18 +1,21 @@
 import unittest
+from unittest.mock import MagicMock, PropertyMock, patch
+
 import requests
-from unittest.mock import patch, MagicMock, PropertyMock
-from openai_cli.client import generate_response, initialize_session, OpenAIError
+
+from openai_cli.client import OpenAIError, generate_response, initialize_session
+
 
 class TestClient(unittest.TestCase):
 
-    @patch('openai_cli.client.requests.Session.post')
-    @patch('openai_cli.client.get_openai_api_key', return_value="test_api_key")
-    @patch('openai_cli.client.requests.Session', autospec=True)  # Mocking the Session itself to prevent any real network interaction
+    @patch("openai_cli.client.requests.Session.post")
+    @patch("openai_cli.client.get_openai_api_key", return_value="test_api_key")
+    @patch(
+        "openai_cli.client.requests.Session", autospec=True
+    )  # Mocking the Session itself to prevent any real network interaction
     def test_generate_response_success(self, mock_session_cls, mock_get_key, mock_post):
         mock_response = MagicMock()
-        mock_response.json.return_value = {
-            'choices': [{'message': {'content': "Mocked response"}}]
-        }
+        mock_response.json.return_value = {"choices": [{"message": {"content": "Mocked response"}}]}
         mock_response.status_code = 200
         mock_post.return_value = mock_response
 
@@ -25,9 +28,9 @@ class TestClient(unittest.TestCase):
         self.assertEqual(response, "Mocked response")
         mock_post.assert_called_once()
 
-    @patch('openai_cli.client.requests.Session.post')
-    @patch('openai_cli.client.get_openai_api_key', return_value="test_api_key")
-    @patch('openai_cli.client.requests.Session', autospec=True)
+    @patch("openai_cli.client.requests.Session.post")
+    @patch("openai_cli.client.get_openai_api_key", return_value="test_api_key")
+    @patch("openai_cli.client.requests.Session", autospec=True)
     def test_generate_response_error(self, mock_session_cls, mock_get_key, mock_post):
         mock_post.side_effect = requests.RequestException("API Error")
 
@@ -39,8 +42,8 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(OpenAIError):
             generate_response("Test prompt")
 
-    @patch('openai_cli.client.get_openai_api_key')
-    @patch('openai_cli.client.requests.Session', autospec=True)
+    @patch("openai_cli.client.get_openai_api_key")
+    @patch("openai_cli.client.requests.Session", autospec=True)
     def test_initialize_session_success(self, mock_session_cls, mock_get_key):
         mock_get_key.return_value = "test_api_key"
 
@@ -51,7 +54,7 @@ class TestClient(unittest.TestCase):
         mock_session_cls.assert_called_once()
         self.assertEqual(session.headers["Authorization"], "Bearer test_api_key")
 
-    @patch('openai_cli.client.get_openai_api_key')
+    @patch("openai_cli.client.get_openai_api_key")
     def test_initialize_session_no_key(self, mock_get_key):
         mock_get_key.return_value = ""
 
@@ -59,5 +62,5 @@ class TestClient(unittest.TestCase):
             initialize_session()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
