@@ -4,12 +4,12 @@ from typing import Any, Dict, List, Optional
 import requests
 
 from .config import (
-    API_BASE_URL,
     DEFAULT_MODEL,
     MAX_TOKENS,
     SYSTEM_MESSAGE,
     TEMPERATURE,
     get_openai_api_key,
+    get_openai_api_url,
 )
 
 
@@ -78,7 +78,7 @@ def generate_response(
     }
 
     try:
-        response = session.post(API_BASE_URL, data=json.dumps(payload))
+        response = session.post(get_openai_api_url(), data=json.dumps(payload))
         response.raise_for_status()
         return _extract_content(response.json())
     except requests.RequestException as e:
